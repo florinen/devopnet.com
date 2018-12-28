@@ -1,0 +1,6 @@
+---
+- hosts: all
+  tasks:
+    - name: Install Telnet
+      package: name=telnet
+    
