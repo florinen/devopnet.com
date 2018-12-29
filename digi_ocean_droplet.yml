@@ -1,0 +1,14 @@
+---
+- name: Create Droplet
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Creat 1 Droplet
+      digital_ocean:
+        state: present
+        image_id: centos-7-x64 
+        size_id: 1gb
+        region_id: nyc1
+        wait_timeout: 600
+        ssh_key_ids: 23764402
+        name: centOS-7
