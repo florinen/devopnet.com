@@ -1,0 +1,124 @@
+---
+- name: Installing NCPA agent
+  hosts: all
+  gather_facts: true 
+  tasks:
+    - name: Install dependency packages on Fedora and Debian
+      when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "9" ) or
+            ( ansible_distribution == "Fedora" and ansible_distribution_major_version == "27") or
+            ( ansible_distribution == "Fedora" and ansible_distribution_major_version == "28") 
+      package: 
+        name: "{{ item }}"
+        state: latest 
+      with_items:
+        - python
+        - python2-dnf
+        - libselinux-python
+      ignore_errors: yes
+
+    - name: Download rpm package on RedHat family
+      when: ( ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") or
+            ( ansible_distribution == "Fedora" )
+      package:
+        name: http://repo.nagios.com/nagios/7/nagios-repo-7-3.el7.noarch.rpm
+        state: present
+
+    - name: Download rpm package on Centos 6
+      when: ( ansible_distribution == "CentOS" and ansible_distribution_major_version == "6") 
+      package:
+        name: http://repo.nagios.com/nagios/6/nagios-repo-6-3.el6.noarch.rpm
+        state: present
+    
+
+    - name: Install agent
+      when: ( ansible_distribution == "CentOS") or
+            ( ansible_distribution == "Fedora")
+      package:
+        name: ncpa
+        state: present
+      ignore_errors: yes  
+
+    - name: Add password to NCPA config file
+      when: ( ansible_distribution == "CentOS") or
+            ( ansible_distribution == "Fedora")
+      lineinfile:
+        dest: /usr/local/ncpa/etc/ncpa.cfg
+        regexp: '^community_string = mytoken'
+        line: 'community_string = hWm3llp7JfnsoxbJcjUU'
+
+    - name: Restart NCPA agent newer OS
+      when: ( ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") or
+            ( ansible_distribution == "Fedora")
+      systemd:
+        name: ncpa_listener
+        state: restarted
+    
+    - name: Restart NCPA agent older OS Centos 6
+      when: ( ansible_distribution == "CentOS" and ansible_distribution_major_version == "6") 
+      service:
+        name:  ncpa_listener
+        state: restarted
+
+    
+   # Install NCPA agent on Debian family
+    
+    - name: Download package for Debian 8 and Ubuntu
+      when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "8") or
+            ( ansible_distribution == "Ubuntu" )
+      apt:
+        deb: https://assets.nagios.com/downloads/ncpa/ncpa-latest.amd64.deb 
+        state: present 
+    
+    - name: Download package for Debian 9 
+      when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "9")
+      apt:
+        deb: https://assets.nagios.com/downloads/ncpa/ncpa-latest.d9.amd64.deb 
+        state: present
+
+    - name: Update cache dpkg on Debian
+      when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "8") or
+            ( ansible_distribution == "Ubuntu") 
+      apt:
+        update_cache: yes
+           
+
+    - name: Install NCPA package
+      when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "8") or
+            ( ansible_distribution == "Debian" and ansible_distribution_major_version == "9") or
+            ( ansible_distribution == "Ubuntu") 
+      apt: 
+        pkg: ncpa
+        state: present
+    
+    - name: Add password to NCPA config file
+      when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "8") or
+            ( ansible_distribution == "Debian" and ansible_distribution_major_version == "9") or
+            ( ansible_distribution == "Ubuntu" )
+      lineinfile:
+        dest: /usr/local/ncpa/etc/ncpa.cfg
+        regexp: '^community_string = mytoken'
+        line: 'community_string = hWm3llp7JfnsoxbJcjUU'
+
+    - name: Restart NCPA agent older OS Debian Family
+      when: ( ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "14")
+      service:
+        name:  ncpa_listener
+        state: restarted
+    
+    - name: Restart NCPA agent newer OS Debian Family
+      when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "8") or
+            ( ansible_distribution == "Debian" and ansible_distribution_major_version == "9") or
+            ( ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "16") or
+            ( ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "18")
+      systemd:
+        name: ncpa_listener
+        state: restarted
+    
+
+        
+
+
+
+      
+
+      
