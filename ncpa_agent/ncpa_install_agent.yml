@@ -3,7 +3,7 @@
   hosts: all
   gather_facts: true 
   tasks:
-    - name: Install dependency packages on Fedora and Debian
+    - name: Install dependency packages on Fedora or Debian
       when: ( ansible_distribution == "Fedora" and ansible_distribution_major_version == "27") or
             ( ansible_distribution == "Fedora" and ansible_distribution_major_version == "28") 
       package: 
