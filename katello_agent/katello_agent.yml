@@ -1,0 +1,48 @@
+---
+- name: Install Katello agent
+  hosts: all
+  tasks:
+    - name: Instalation of Katello agent on Centos
+      when: ( ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") or
+            ( ansible_distribution == "Fedora" )
+      package:
+        name: https://fedorapeople.org/groups/katello/releases/yum/3.5/client/el7/x86_64/katello-client-repos-latest.rpm 
+        state: present
+    - name:
+      package:
+        name: https://yum.theforeman.org/releases/1.16/el7/x86_64/foreman-release.rpm
+        state: present
+    
+    - name: Install Pakages
+      when: ansible_distribution == "CentOS"  
+      yum:
+        name: epel-release
+        state: present
+        
+
+        
+        #- name: Install packages Dependencies on CentOS
+        # when: ( ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") 
+        #package:
+        #name: foreman-release-scl
+        #state: present
+        #ignore_errors: true 
+        
+    - name: Install dependencies on Centos
+      when: ansible_distribution == "CentOS"  
+      package:
+        name: "{{ item }}"
+        state: present 
+      with_items:
+        - python-pip 
+        - foreman-release-scl
+        - python2-django
+      ignore_errors: yes     
+        
+
+    - name: Install the agent
+      when: ( ansible_distribution == "CentOS" ) or
+            ( ansible_distribution == "Fedora" )
+      package:
+        name: katello-agent
+        state: present 
