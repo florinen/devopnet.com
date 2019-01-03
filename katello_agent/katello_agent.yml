@@ -13,21 +13,12 @@
         name: https://yum.theforeman.org/releases/1.16/el7/x86_64/foreman-release.rpm
         state: present
     
-    - name: Install Pakages
+    - name: Install Repos
       when: ansible_distribution == "CentOS"  
       yum:
         name: epel-release
         state: present
-        
-
-        
-        #- name: Install packages Dependencies on CentOS
-        # when: ( ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") 
-        #package:
-        #name: foreman-release-scl
-        #state: present
-        #ignore_errors: true 
-        
+               
     - name: Install dependencies on Centos
       when: ansible_distribution == "CentOS"  
       package:
