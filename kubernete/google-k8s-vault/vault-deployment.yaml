@@ -6,6 +6,7 @@ metadata:
     app: vault
 
 spec:
+  externalIPs: 10.10.40.50
   ports:
     - name: vault
       port: 80
