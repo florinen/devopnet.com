@@ -6,6 +6,8 @@ metadata:
   name: jira
   namespace: apps
 spec:
+externalIPs: 
+    - 10.10.40.50
   ports:
     - port: 8080
       targetPort: 8080
