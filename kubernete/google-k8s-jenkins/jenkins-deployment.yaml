@@ -1,0 +1,37 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: jenkins
+  namespace: tools
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+      name: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+        name: jenkins
+    spec:
+      containers:
+      - stdin: true
+        tty: true
+        name: jenkins
+        imagePullPolicy: Always
+        image: fsadykov/centos_jenkins:0.2
+        ports:
+        - containerPort: 8080
+        - containerPort: 50000
+
+        volumeMounts:
+          - mountPath: /var/run
+            name: docker-sock
+          - mountPath: /var/jenkins_home
+            name: jenkins-home
+      volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run
+        - name: jenkins-home
