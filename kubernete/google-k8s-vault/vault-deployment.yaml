@@ -4,7 +4,7 @@ metadata:
   name: vault
   labels:
     app: vault
-  namespace: tools
+
 spec:
   ports:
     - name: vault
@@ -20,7 +20,7 @@ metadata:
   labels:
     app: vault
   name: vault
-  namespace: tools
+
 spec:
   replicas: 1
   template:
