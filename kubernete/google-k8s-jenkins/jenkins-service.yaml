@@ -5,7 +5,7 @@ metadata:
     app: jenkins
     name: jenkins
   name: jenkins
-  namespace: tools
+  namespace: apps
 spec:
   ports:
   - nodePort: 30618

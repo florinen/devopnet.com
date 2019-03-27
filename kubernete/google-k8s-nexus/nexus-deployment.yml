@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: nexus-deployment
-  namespace: tools
+  namespace: apps
   labels:
     app: nexus
 spec:

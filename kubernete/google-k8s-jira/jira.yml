@@ -5,7 +5,7 @@ metadata:
   labels:
     app: jira
   name: jira
-  namespace: tools
+  namespace: apps
 spec:
   replicas: 1
   template:
