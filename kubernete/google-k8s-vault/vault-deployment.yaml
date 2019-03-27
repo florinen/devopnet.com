@@ -23,6 +23,7 @@ metadata:
   labels:
     app: vault
   name: vault
+  namespace: apps
 
 spec:
   replicas: 1
