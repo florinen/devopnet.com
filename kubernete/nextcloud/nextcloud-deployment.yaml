@@ -10,7 +10,7 @@
        image: nextcloud
        ports:
          - containerPort: 80
-     - name: rss-reader
-       image: nextcloud
+     - name: nginx-next
+       image: nginx
        ports:
-         - containerPort: 88
+         - containerPort: 8080
